@@ -3251,6 +3251,8 @@ gint main(int argc, char *argv[])
 	g_print("Janus commit: %s\n", janus_build_git_sha);
 	g_print("Compiled on:  %s\n\n", janus_build_git_time);
 
+
+	// 申明定义在cmdline.h/cmdline.cpp,  这两个编译文件自动生成
 	struct gengetopt_args_info args_info;
 
 	/* Let's call our cmdline parser */
