@@ -22,9 +22,8 @@
 * \note This output is buffered and may not appear immediately on stdout. */
 void janus_vprintf(const char *format, ...) G_GNUC_PRINTF(1, 2);
 
-/*! \brief Log initialization
-* \note This should be called before attempting to use the logger. A buffer
-* pool and processing thread are created.
+/*! \brief 日志初始化
+*  该函数应该在使用logger功能之前被调用，内存池和日志处理线程将会被创建
 * @param daemon Whether the Janus is running as a daemon or not
 * @param console Whether the output should be printed on stdout or not
 * @param logfile Log file to save the output to, if any
