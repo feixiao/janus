@@ -391,16 +391,6 @@ plugins_libjanus_videocall_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(plugins_libjanus_videocall_la_LDFLAGS) $(LDFLAGS) -o $@
 am_plugins_libjanus_videocall_la_rpath =  \
 	-rpath $(plugindir)
-plugins_libjanus_videoconference_la_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_2)
-am_plugins_libjanus_videoconference_la_OBJECTS = plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo
-plugins_libjanus_videoconference_la_OBJECTS =  \
-	$(am_plugins_libjanus_videoconference_la_OBJECTS)
-plugins_libjanus_videoconference_la_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(plugins_libjanus_videoconference_la_CFLAGS) \
-	$(CFLAGS) $(plugins_libjanus_videoconference_la_LDFLAGS) \
-	$(LDFLAGS) -o $@
 plugins_libjanus_videoroom_la_DEPENDENCIES =  \
 	$(am__DEPENDENCIES_2)
 am__plugins_libjanus_videoroom_la_SOURCES_DIST =  \
@@ -547,6 +537,7 @@ AM_V_at = $(am__v_at_$(V))
 am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 am__v_at_1 = 
+DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
@@ -579,7 +570,6 @@ SOURCES = $(events_libjanus_rabbitmqevh_la_SOURCES) \
 	$(plugins_libjanus_streaming_la_SOURCES) \
 	$(plugins_libjanus_textroom_la_SOURCES) \
 	$(plugins_libjanus_videocall_la_SOURCES) \
-	$(plugins_libjanus_videoconference_la_SOURCES) \
 	$(plugins_libjanus_videoroom_la_SOURCES) \
 	$(plugins_libjanus_voicemail_la_SOURCES) \
 	$(transports_libjanus_http_la_SOURCES) \
@@ -599,7 +589,6 @@ DIST_SOURCES = $(am__events_libjanus_rabbitmqevh_la_SOURCES_DIST) \
 	$(am__plugins_libjanus_streaming_la_SOURCES_DIST) \
 	$(am__plugins_libjanus_textroom_la_SOURCES_DIST) \
 	$(am__plugins_libjanus_videocall_la_SOURCES_DIST) \
-	$(plugins_libjanus_videoconference_la_SOURCES) \
 	$(am__plugins_libjanus_videoroom_la_SOURCES_DIST) \
 	$(am__plugins_libjanus_voicemail_la_SOURCES_DIST) \
 	$(am__transports_libjanus_http_la_SOURCES_DIST) \
@@ -701,13 +690,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/missing aclocal-1.15
+ACLOCAL = ${SHELL} /mnt/d/research/janus/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 0
 AR = ar
-AUTOCONF = ${SHELL} /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/missing autoconf
-AUTOHEADER = ${SHELL} /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/missing autoheader
-AUTOMAKE = ${SHELL} /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/missing automake-1.15
+AUTOCONF = ${SHELL} /mnt/d/research/janus/missing autoconf
+AUTOHEADER = ${SHELL} /mnt/d/research/janus/missing autoheader
+AUTOMAKE = ${SHELL} /mnt/d/research/janus/missing automake-1.15
 AWK = gawk
 BORINGSSL_CFLAGS = 
 BORINGSSL_LIBS = 
@@ -720,8 +709,8 @@ CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"Janus\ Gateway\" -DPACKAGE_TARNAME=\"janus-gateway\" -DPACKAGE_VERSION=\"0.3.1\" -DPACKAGE_STRING=\"Janus\ Gateway\ 0.3.1\" -DPACKAGE_BUGREPORT=\"https://github.com/meetecho/janus-gateway\" -DPACKAGE_URL=\"https://janus.conf.meetecho.com\" -DPACKAGE=\"janus-gateway\" -DVERSION=\"0.3.1\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -D__EXTENSIONS__=1 -D_ALL_SOURCE=1 -D_GNU_SOURCE=1 -D_POSIX_PTHREAD_SEMANTICS=1 -D_TANDEM_SOURCE=1 -DHAVE_DLFCN_H=1 -DLT_OBJDIR=\".libs/\" -DHAVE_PORTRANGE=1 -DHAVE_LIBNICE_TCP=1 -DHAVE_SRTP_2=1 -DHAVE_SRTP_AESGCM=1 -DHAVE_LIBCURL=1 -DHAVE_SAMPLEEVH=1 -DHAVE_WEBSOCKETS=1 -DHAVE_LIBWEBSOCKETS_PEER_SIMPLE=1 -DHAVE_PFUNIX=1
 DEPDIR = .deps
 DLLTOOL = false
-DOT = dot
-DOXYGEN = doxygen
+DOT = 
+DOXYGEN = 
 DSYMUTIL = 
 DUMPBIN = 
 ECHO_C = 
@@ -757,7 +746,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/missing makeinfo
+MAKEINFO = ${SHELL} /mnt/d/research/janus/missing makeinfo
 MANIFEST_TOOL = :
 MHD_CFLAGS = -I/usr/include/p11-kit-1
 MHD_LIBS = -lmicrohttpd
@@ -801,10 +790,10 @@ TRANSPORTS_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0
 TRANSPORTS_LIBS = -lglib-2.0 -ljansson
 VERSION = 0.3.1
 WS_MANUAL_LIBS = -lwebsockets
-abs_builddir = /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1
-abs_srcdir = /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1
-abs_top_builddir = /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1
-abs_top_srcdir = /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1
+abs_builddir = /mnt/d/research/janus
+abs_srcdir = /mnt/d/research/janus
+abs_top_builddir = /mnt/d/research/janus
+abs_top_srcdir = /mnt/d/research/janus
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -833,7 +822,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/install-sh
+install_sh = ${SHELL} /mnt/d/research/janus/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -842,7 +831,7 @@ mandir = ${datarootdir}/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /mnt/d/gosrc/src/VideoConference/webrtc-server/janus/janus-gateway-0.3.1/opt/janus
+prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 runstatedir = ${localstatedir}/run
@@ -882,8 +871,8 @@ EXTRA_DIST = $(NULL) conf/janus.cfg.sample.in janus.ggo \
 	$(am__append_33) $(am__append_37) $(am__append_40) \
 	$(am__append_43) $(am__append_47) $(am__append_51) \
 	$(am__append_54) $(am__append_57) $(am__append_61) \
-	conf/janus.plugin.videoconference.cfg.sample $(am__append_66) \
-	$(am__append_69) $(am__append_72) $(am__append_75)
+	$(am__append_66) $(am__append_69) $(am__append_72) \
+	$(am__append_75)
 CLEANFILES = $(NULL) conf/janus.cfg.sample cmdline.c cmdline.h \
 	version.c $(am__append_4) $(am__append_8) $(am__append_34) \
 	$(am__append_48) $(am__append_58) $(am__append_67) \
@@ -905,15 +894,14 @@ conf_DATA = conf/janus.cfg.sample $(am__append_2) $(am__append_6) \
 	$(am__append_28) $(am__append_31) $(am__append_36) \
 	$(am__append_39) $(am__append_42) $(am__append_45) \
 	$(am__append_50) $(am__append_53) $(am__append_56) \
-	$(am__append_60) conf/janus.plugin.videoconference.cfg.sample
+	$(am__append_60)
 certdir = $(datadir)/janus/certs
 cert_DATA = certs/mycert.key certs/mycert.pem
 plugindir = $(libdir)/janus/plugins
 plugin_LTLIBRARIES = $(NULL) $(am__append_24) $(am__append_27) \
 	$(am__append_30) $(am__append_35) $(am__append_38) \
 	$(am__append_41) $(am__append_44) $(am__append_49) \
-	$(am__append_52) $(am__append_55) $(am__append_59) \
-	plugins/libjanus_videoconference.la
+	$(am__append_52) $(am__append_55) $(am__append_59)
 transportdir = $(libdir)/janus/transports
 transport_LTLIBRARIES = $(NULL) $(am__append_1) $(am__append_5) \
 	$(am__append_9) $(am__append_12) $(am__append_15)
@@ -1113,24 +1101,6 @@ plugins_libjanus_textroom_la_SOURCES = plugins/janus_textroom.c
 plugins_libjanus_textroom_la_CFLAGS = $(plugins_cflags)
 plugins_libjanus_textroom_la_LDFLAGS = $(plugins_ldflags)
 plugins_libjanus_textroom_la_LIBADD = $(plugins_libadd)
-DEFAULT_INCLUDES = -I$(srcdir)/arcdeps/inc/im \
-	-I$(srcdir)/arcdeps/inc/BasicLib -I$(srcdir)/arcdeps/inc/cjson \
-	-I$(srcdir)/arcdeps/inc/libevent \
-	-I$(srcdir)/arcdeps/inc/platform
-plugins_libjanus_videoconference_la_SOURCES = plugins/janus_videoconference.c
-plugins_libjanus_videoconference_la_CFLAGS = $(plugins_cflags)
-plugins_libjanus_videoconference_la_LDFLAGS = $(plugins_ldflags)
-plugins_libjanus_videoconference_la_LIBADD = $(plugins_libadd) \
-	-L$(srcdir)/arcdeps/lib/im -lRtcMessage \
-	-L$(srcdir)/arcdeps/lib/BasicLib -lcommon \
-	-L$(srcdir)/arcdeps/lib/BasicLib -lmpl_utility \
-	-L$(srcdir)/arcdeps/lib/BasicLib -larcsoft_mhttp \
-	-L$(srcdir)/arcdeps/lib/platform -lmpbase \
-	-L$(srcdir)/arcdeps/lib/platform -lmputility \
-	-L$(srcdir)/arcdeps/lib/platform -lmpsocket \
-	-L$(srcdir)/arcdeps/lib/platform -lmpkernel \
-	-L$(srcdir)/arcdeps/lib/third-party -larcjson \
-	-L$(srcdir)/arcdeps/lib/libevent -levent
 #janus_pp_rec_SOURCES = \
 #	postprocessing/pp-g711.c \
 #	postprocessing/pp-g711.h \
@@ -1370,11 +1340,6 @@ plugins/plugins_libjanus_videocall_la-janus_videocall.lo:  \
 
 plugins/libjanus_videocall.la: $(plugins_libjanus_videocall_la_OBJECTS) $(plugins_libjanus_videocall_la_DEPENDENCIES) $(EXTRA_plugins_libjanus_videocall_la_DEPENDENCIES) plugins/$(am__dirstamp)
 	$(AM_V_CCLD)$(plugins_libjanus_videocall_la_LINK) $(am_plugins_libjanus_videocall_la_rpath) $(plugins_libjanus_videocall_la_OBJECTS) $(plugins_libjanus_videocall_la_LIBADD) $(LIBS)
-plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo:  \
-	plugins/$(am__dirstamp) plugins/$(DEPDIR)/$(am__dirstamp)
-
-plugins/libjanus_videoconference.la: $(plugins_libjanus_videoconference_la_OBJECTS) $(plugins_libjanus_videoconference_la_DEPENDENCIES) $(EXTRA_plugins_libjanus_videoconference_la_DEPENDENCIES) plugins/$(am__dirstamp)
-	$(AM_V_CCLD)$(plugins_libjanus_videoconference_la_LINK) -rpath $(plugindir) $(plugins_libjanus_videoconference_la_OBJECTS) $(plugins_libjanus_videoconference_la_LIBADD) $(LIBS)
 plugins/plugins_libjanus_videoroom_la-janus_videoroom.lo:  \
 	plugins/$(am__dirstamp) plugins/$(DEPDIR)/$(am__dirstamp)
 
@@ -1556,7 +1521,6 @@ include plugins/$(DEPDIR)/plugins_libjanus_sipre_la-janus_sipre.Plo
 include plugins/$(DEPDIR)/plugins_libjanus_streaming_la-janus_streaming.Plo
 include plugins/$(DEPDIR)/plugins_libjanus_textroom_la-janus_textroom.Plo
 include plugins/$(DEPDIR)/plugins_libjanus_videocall_la-janus_videocall.Plo
-include plugins/$(DEPDIR)/plugins_libjanus_videoconference_la-janus_videoconference.Plo
 include plugins/$(DEPDIR)/plugins_libjanus_videoroom_la-janus_videoroom.Plo
 include plugins/$(DEPDIR)/plugins_libjanus_voicemail_la-janus_voicemail.Plo
 include postprocessing/$(DEPDIR)/janus_pp_rec-janus-pp-rec.Po
@@ -1672,13 +1636,6 @@ plugins/plugins_libjanus_videocall_la-janus_videocall.lo: plugins/janus_videocal
 #	$(AM_V_CC)source='plugins/janus_videocall.c' object='plugins/plugins_libjanus_videocall_la-janus_videocall.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(plugins_libjanus_videocall_la_CFLAGS) $(CFLAGS) -c -o plugins/plugins_libjanus_videocall_la-janus_videocall.lo `test -f 'plugins/janus_videocall.c' || echo '$(srcdir)/'`plugins/janus_videocall.c
-
-plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo: plugins/janus_videoconference.c
-	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(plugins_libjanus_videoconference_la_CFLAGS) $(CFLAGS) -MT plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo -MD -MP -MF plugins/$(DEPDIR)/plugins_libjanus_videoconference_la-janus_videoconference.Tpo -c -o plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo `test -f 'plugins/janus_videoconference.c' || echo '$(srcdir)/'`plugins/janus_videoconference.c
-	$(AM_V_at)$(am__mv) plugins/$(DEPDIR)/plugins_libjanus_videoconference_la-janus_videoconference.Tpo plugins/$(DEPDIR)/plugins_libjanus_videoconference_la-janus_videoconference.Plo
-#	$(AM_V_CC)source='plugins/janus_videoconference.c' object='plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo' libtool=yes \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(plugins_libjanus_videoconference_la_CFLAGS) $(CFLAGS) -c -o plugins/plugins_libjanus_videoconference_la-janus_videoconference.lo `test -f 'plugins/janus_videoconference.c' || echo '$(srcdir)/'`plugins/janus_videoconference.c
 
 plugins/plugins_libjanus_videoroom_la-janus_videoroom.lo: plugins/janus_videoroom.c
 	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(plugins_libjanus_videoroom_la_CFLAGS) $(CFLAGS) -MT plugins/plugins_libjanus_videoroom_la-janus_videoroom.lo -MD -MP -MF plugins/$(DEPDIR)/plugins_libjanus_videoroom_la-janus_videoroom.Tpo -c -o plugins/plugins_libjanus_videoroom_la-janus_videoroom.lo `test -f 'plugins/janus_videoroom.c' || echo '$(srcdir)/'`plugins/janus_videoroom.c

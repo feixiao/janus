@@ -987,7 +987,7 @@ janus_ice_handle *janus_ice_handle_create(void *gateway_session, const char *opa
 	janus_session *session = (janus_session *)gateway_session;
 	guint64 handle_id = 0;
 	while(handle_id == 0) {
-		handle-_id = janus_random_uint64();
+		handle_id = janus_random_uint64();
 		// 随机生成handle_id然后检测是否已经存在
 		if(janus_ice_handle_find(gateway_session, handle_id) != NULL) {
 			/* Handle ID already taken, try another one */

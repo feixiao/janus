@@ -31,7 +31,7 @@ extern "C" {
 
 #ifndef CMDLINE_PARSER_VERSION
 /** @brief the program version */
-#define CMDLINE_PARSER_VERSION "0.4.4"
+#define CMDLINE_PARSER_VERSION "0.3.1"
 #endif
 
 /** @brief Where the command line options are stored */
@@ -70,9 +70,9 @@ struct gengetopt_args_info
   char * cert_pwd_arg;	/**< @brief DTLS certificate key passphrase (if needed).  */
   char * cert_pwd_orig;	/**< @brief DTLS certificate key passphrase (if needed) original value given at command line.  */
   const char *cert_pwd_help; /**< @brief DTLS certificate key passphrase (if needed) help description.  */
-  char * stun_server_arg;	/**< @brief STUN server(:port) to use, if needed (e.g., Janus behind NAT, default=none).  */
-  char * stun_server_orig;	/**< @brief STUN server(:port) to use, if needed (e.g., Janus behind NAT, default=none) original value given at command line.  */
-  const char *stun_server_help; /**< @brief STUN server(:port) to use, if needed (e.g., Janus behind NAT, default=none) help description.  */
+  char * stun_server_arg;	/**< @brief STUN server(:port) to use, if needed (e.g., gateway behind NAT, default=none).  */
+  char * stun_server_orig;	/**< @brief STUN server(:port) to use, if needed (e.g., gateway behind NAT, default=none) original value given at command line.  */
+  const char *stun_server_help; /**< @brief STUN server(:port) to use, if needed (e.g., gateway behind NAT, default=none) help description.  */
   char * nat_1_1_arg;	/**< @brief Public IP to put in all host candidates, assuming a 1:1 NAT is in place (e.g., Amazon EC2 instances, default=none).  */
   char * nat_1_1_orig;	/**< @brief Public IP to put in all host candidates, assuming a 1:1 NAT is in place (e.g., Amazon EC2 instances, default=none) original value given at command line.  */
   const char *nat_1_1_help; /**< @brief Public IP to put in all host candidates, assuming a 1:1 NAT is in place (e.g., Amazon EC2 instances, default=none) help description.  */
@@ -109,9 +109,6 @@ struct gengetopt_args_info
   int session_timeout_arg;	/**< @brief Session timeout value, in seconds (default=60).  */
   char * session_timeout_orig;	/**< @brief Session timeout value, in seconds (default=60) original value given at command line.  */
   const char *session_timeout_help; /**< @brief Session timeout value, in seconds (default=60) help description.  */
-  int reclaim_session_timeout_arg;	/**< @brief Reclaim session timeout value, in seconds (default=0).  */
-  char * reclaim_session_timeout_orig;	/**< @brief Reclaim session timeout value, in seconds (default=0) original value given at command line.  */
-  const char *reclaim_session_timeout_help; /**< @brief Reclaim session timeout value, in seconds (default=0) help description.  */
   int debug_level_arg;	/**< @brief Debug/logging level (0=disable debugging, 7=maximum debug level; default=4).  */
   char * debug_level_orig;	/**< @brief Debug/logging level (0=disable debugging, 7=maximum debug level; default=4) original value given at command line.  */
   const char *debug_level_help; /**< @brief Debug/logging level (0=disable debugging, 7=maximum debug level; default=4) help description.  */
@@ -119,8 +116,6 @@ struct gengetopt_args_info
   const char *debug_timestamps_help; /**< @brief Enable debug/logging timestamps help description.  */
   int disable_colors_flag;	/**< @brief Disable color in the logging (default=off).  */
   const char *disable_colors_help; /**< @brief Disable color in the logging help description.  */
-  int debug_locks_flag;	/**< @brief Enable debugging of locks/mutexes (very verbose!) (default=off).  */
-  const char *debug_locks_help; /**< @brief Enable debugging of locks/mutexes (very verbose!) help description.  */
   char * apisecret_arg;	/**< @brief API secret all requests need to pass in order to be accepted by Janus (useful when wrapping Janus API requests in a server, none by default).  */
   char * apisecret_orig;	/**< @brief API secret all requests need to pass in order to be accepted by Janus (useful when wrapping Janus API requests in a server, none by default) original value given at command line.  */
   const char *apisecret_help; /**< @brief API secret all requests need to pass in order to be accepted by Janus (useful when wrapping Janus API requests in a server, none by default) help description.  */
@@ -160,11 +155,9 @@ struct gengetopt_args_info
   unsigned int rtp_port_range_given ;	/**< @brief Whether rtp-port-range was given.  */
   unsigned int server_name_given ;	/**< @brief Whether server-name was given.  */
   unsigned int session_timeout_given ;	/**< @brief Whether session-timeout was given.  */
-  unsigned int reclaim_session_timeout_given ;	/**< @brief Whether reclaim-session-timeout was given.  */
   unsigned int debug_level_given ;	/**< @brief Whether debug-level was given.  */
   unsigned int debug_timestamps_given ;	/**< @brief Whether debug-timestamps was given.  */
   unsigned int disable_colors_given ;	/**< @brief Whether disable-colors was given.  */
-  unsigned int debug_locks_given ;	/**< @brief Whether debug-locks was given.  */
   unsigned int apisecret_given ;	/**< @brief Whether apisecret was given.  */
   unsigned int token_auth_given ;	/**< @brief Whether token-auth was given.  */
   unsigned int token_auth_secret_given ;	/**< @brief Whether token-auth-secret was given.  */
