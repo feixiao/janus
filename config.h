@@ -13,6 +13,8 @@
 
 #include <glib.h>
 
+
+// 配置文件采用kv形式: name=value
 /*! \brief Configuration item (name=value) */
 typedef struct janus_config_item {
 	/*! \brief Name of the item */
@@ -21,6 +23,7 @@ typedef struct janus_config_item {
 	const char *value;
 } janus_config_item;
 
+// 分类
 /*! \brief Configuration category ([category]) */
 typedef struct janus_config_category {
 	/*! \brief Name of the category */

@@ -358,7 +358,7 @@ gboolean janus_transport_is_auth_token_needed(janus_transport *plugin);
 gboolean janus_transport_is_auth_token_valid(janus_transport *plugin, const char *token);
 void janus_transport_notify_event(janus_transport *plugin, void *transport, json_t *event);
 
-// 传输插件的回掉函数
+// 传输插件的回调函数
 static janus_transport_callbacks janus_handler_transport =
 	{
 		.incoming_request = janus_transport_incoming_request,
@@ -3244,6 +3244,7 @@ gboolean janus_plugin_auth_signature_contains(janus_plugin *plugin, const char *
 gint main(int argc, char *argv[])
 {
 	/* Core dumps may be disallowed by parent of this process; change that */
+	// https://www.cnblogs.com/gj-Acit/p/5515022.html
 	struct rlimit core_limits;
 	core_limits.rlim_cur = core_limits.rlim_max = RLIM_INFINITY;
 	setrlimit(RLIMIT_CORE, &core_limits);
@@ -3255,9 +3256,13 @@ gint main(int argc, char *argv[])
 	// 申明定义在cmdline.h/cmdline.cpp,  这两个编译文件自动生成
 	struct gengetopt_args_info args_info;
 
+
+	// 命令行参数解析
 	/* Let's call our cmdline parser */
 	if(cmdline_parser(argc, argv, &args_info) != 0)
 		exit(1);
+
+	// 程序配置方式: 当命令行参数和配置文件都存在的情况下面，采用命令行参数中的内容
 
 	/* Any configuration to open? */
 	if(args_info.config_given) {
@@ -3268,7 +3273,8 @@ gint main(int argc, char *argv[])
 	} else {
 		configs_folder = g_strdup (CONFDIR);
 	}
-	// 获取janus.cfg的完整路径
+
+	// 没有提供配置文件的话，从提供的文件夹里面获取janus.cfg
 	if(config_file == NULL) {
 		char file[255];
 		g_snprintf(file, 255, "%s/janus.cfg", configs_folder);
@@ -3289,9 +3295,10 @@ gint main(int argc, char *argv[])
 		}
 	}
 
-	/* Check if we need to log to console and/or file */
+	// 日志是否输出到控制台
 	gboolean use_stdout = TRUE;
 	if(args_info.disable_stdout_given) {
+		// 禁止控制台输出日志
 		use_stdout = FALSE;
 		janus_config_add_item(config, "general", "log_to_stdout", "no");
 	} else {
@@ -3300,6 +3307,7 @@ gint main(int argc, char *argv[])
 		if(item && item->value && !janus_is_true(item->value))
 			use_stdout = FALSE;
 	}
+	// 日志是否输出到文件
 	const char *logfile = NULL;
 	if(args_info.log_file_given) {
 		logfile = args_info.log_file_arg;
@@ -3311,7 +3319,7 @@ gint main(int argc, char *argv[])
 			logfile = item->value;
 	}
 
-	/* Check if we're going to daemonize Janus */
+	// 是否以后台服务的方式期待Janus
 	if(args_info.daemon_given) {
 		daemonize = TRUE;
 		janus_config_add_item(config, "general", "daemonize", "yes");
@@ -3321,6 +3329,7 @@ gint main(int argc, char *argv[])
 		if(item && item->value && janus_is_true(item->value))
 			daemonize = TRUE;
 	}
+
 	/* If we're going to daemonize, make sure logging to stdout is disabled and a log file has been specified */
 	if(daemonize && use_stdout) {
 		use_stdout = FALSE;
@@ -3413,6 +3422,7 @@ gint main(int argc, char *argv[])
 	janus_log_level = LOG_INFO;
 	janus_log_timestamps = FALSE;
 	janus_log_colors = TRUE;
+	// 设置日志级别
 	if(args_info.debug_level_given) {
 		if(args_info.debug_level_arg < LOG_NONE)
 			args_info.debug_level_arg = 0;
@@ -3421,7 +3431,7 @@ gint main(int argc, char *argv[])
 		janus_log_level = args_info.debug_level_arg;
 	}
 
-	/* Any PID we need to create? */
+	// 创建pid文件
 	const char *pidfile = NULL;
 	if(args_info.pid_file_given) {
 		pidfile = args_info.pid_file_arg;
@@ -3457,7 +3467,7 @@ gint main(int argc, char *argv[])
 			}
 		}
 	}
-	/* 命令行参数覆盖配置文件参数 */
+	/* 下面参数只能在命令行中设置，配置文件中配置没有用 */
 	JANUS_PRINT("Checking command line arguments...\n");
 	if(args_info.debug_timestamps_given) {
 		janus_config_add_item(config, "general", "debug_timestamps", "yes");
