@@ -372,7 +372,7 @@ static janus_transport_callbacks janus_handler_transport =
 	};
 static GAsyncQueue *requests = NULL;		// 请求队列
 static janus_request exit_message;
-static GThreadPool *tasks = NULL;			// 任务队列
+static GThreadPool *tasks = NULL;			// 任务队列(异步处理)
 void janus_transport_task(gpointer data, gpointer user_data);
 ///@}
 

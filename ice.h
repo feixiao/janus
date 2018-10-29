@@ -34,22 +34,25 @@
 #include "plugins/plugin.h"
 
 
-/*! \brief ICE stuff initialization
- * @param[in] ice_lite Whether the ICE Lite mode should be enabled or not
- * @param[in] ice_tcp Whether ICE-TCP support should be enabled or not (only libnice >= 0.1.8, currently broken)
- * @param[in] full_trickle Whether full-trickle must be used (instead of half-trickle)
- * @param[in] ipv6 Whether IPv6 candidates must be negotiated or not
- * @param[in] rtp_min_port Minimum port to use for RTP/RTCP, if a range is to be used
- * @param[in] rtp_max_port Maximum port to use for RTP/RTCP, if a range is to be used */
+/*! \brief ICE stuff initialization (libnice库初始化工作,启动了janus_ice_handles_watchdog线程)
+ * @param[in] ice_lite  ICE Lite模式是否被支持
+ * @param[in] ice_tcp   ICE TCP模式是否被支持(only libnice >= 0.1.8, currently broken)
+ * @param[in] full_trickle  full-trickle是否必须被使用 (instead of half-trickle)
+ * @param[in] ipv6 		IPv6候选地址是否被协商
+ * @param[in] rtp_min_port  RTP/RTCP使用的最小端口
+ * @param[in] rtp_max_port 	RTP/RTCP使用的最大端口*/
 void janus_ice_init(gboolean ice_lite, gboolean ice_tcp, gboolean full_trickle, gboolean ipv6, uint16_t rtp_min_port, uint16_t rtp_max_port);
-/*! \brief ICE stuff de-initialization */
+
+/*! \brief ICE stuff de-initialization (libnice清理工作) */
 void janus_ice_deinit(void);
+
 /*! \brief Method to force Janus to use a STUN server when gathering candidates
  * @param[in] stun_server STUN server address to use
  * @param[in] stun_port STUN port to use
  * @returns 0 in case of success, a negative integer on errors */
 int janus_ice_set_stun_server(gchar *stun_server, uint16_t stun_port);
-/*! \brief Method to force Janus to use a TURN server when gathering candidates
+
+/*! \brief 强制Janus在收集候选地址使用TURN服务
  * @param[in] turn_server TURN server address to use
  * @param[in] turn_port TURN port to use
  * @param[in] turn_type Relay type (udp, tcp or tls)
@@ -57,7 +60,8 @@ int janus_ice_set_stun_server(gchar *stun_server, uint16_t stun_port);
  * @param[in] turn_pwd TURN password, if needed
  * @returns 0 in case of success, a negative integer on errors */
 int janus_ice_set_turn_server(gchar *turn_server, uint16_t turn_port, gchar *turn_type, gchar *turn_user, gchar *turn_pwd);
-/*! \brief Method to force Janus to contact a TURN REST API server to get a TURN service to use when gathering candidates.
+
+/*! \brief 强制要求JJanus在收集候选地址通过Rest API获取TURN服务地址.
  * The TURN REST API takes precedence over any static credential passed via janus_ice_set_turn_server
  * @note Requires libcurl to be available, and a working TURN REST API backend (see turnrest.h)
  * @param[in] api_server TURN REST API backend (NULL to disable the API)
@@ -65,23 +69,30 @@ int janus_ice_set_turn_server(gchar *turn_server, uint16_t turn_port, gchar *tur
  * @param[in] api_method HTTP method to use (POST by default)
  * @returns 0 in case of success, a negative integer on errors */
 int janus_ice_set_turn_rest_api(gchar *api_server, gchar *api_key, gchar *api_method);
-/*! \brief Method to get the STUN server IP address
+
+/*! \brief 获取STUN服务地址(全局变量janus_stun_server)
  * @returns The currently used STUN server IP address, if available, or NULL if not */
 char *janus_ice_get_stun_server(void);
-/*! \brief Method to get the STUN server port
+
+/*! \brief 获取STUN服务端口(全局变量janus_stun_port)
  * @returns The currently used STUN server port, if available, or 0 if not */
 uint16_t janus_ice_get_stun_port(void);
-/*! \brief Method to get the TURN server IP address
+
+/*! \brief 获取TURN服务地址(全局变量janus_turn_server)
  * @returns The currently used TURN server IP address, if available, or NULL if not */
 char *janus_ice_get_turn_server(void);
-/*! \brief Method to get the TURN server port
+
+/*! \brief 获取TURN服务端口(全局变量janus_turn_port)
  * @returns The currently used TURN server port, if available, or 0 if not */
 uint16_t janus_ice_get_turn_port(void);
+
 /*! \brief Method to get the specified TURN REST API backend, if any
  * @returns The currently specified  TURN REST API backend, if available, or NULL if not */
 char *janus_ice_get_turn_rest_api(void);
+
 /*! \brief Helper method to force Janus to overwrite all host candidates with the public IP */
 void janus_ice_enable_nat_1_1(void);
+
 /*! \brief Method to add an interface/IP to the enforce list for ICE (that is, only gather candidates from these and ignore the others)
  * \note This method is especially useful to speed up the ICE gathering process on the gateway: in fact,
  * if you know in advance which interface must be used (e.g., the main interface connected to the internet),
@@ -89,10 +100,12 @@ void janus_ice_enable_nat_1_1(void);
  * If you're interested in excluding interfaces explicitly, instead, check janus_ice_ignore_interface.
  * @param[in] ip Interface/IP to enforce (e.g., 192.168. or eth0) */
 void janus_ice_enforce_interface(const char *ip);
+
 /*! \brief Method to check whether an interface is currently in the enforce list for ICE (that is, won't have candidates)
  * @param[in] ip Interface/IP to check (e.g., 192.168.244.1 or eth1)
  * @returns true if the interface/IP is in the enforce list, false otherwise */
 gboolean janus_ice_is_enforced(const char *ip);
+
 /*! \brief Method to add an interface/IP to the ignore list for ICE (that is, don't gather candidates)
  * \note This method is especially useful to speed up the ICE gathering process on the gateway: in fact,
  * if you know in advance an interface is not going to be used (e.g., one of those created by VMware),
@@ -101,51 +114,67 @@ gboolean janus_ice_is_enforced(const char *ip);
  * If you're interested in only using specific interfaces, instead, check janus_ice_enforce_interface.
  * @param[in] ip Interface/IP to ignore (e.g., 192.168. or eth1) */
 void janus_ice_ignore_interface(const char *ip);
+
 /*! \brief Method to check whether an interface/IP is currently in the ignore list for ICE (that is, won't have candidates)
  * @param[in] ip Interface/IP to check (e.g., 192.168.244.1 or eth1)
  * @returns true if the interface/IP is in the ignore list, false otherwise */
 gboolean janus_ice_is_ignored(const char *ip);
+
 /*! \brief Method to check whether ICE Lite mode is enabled or not (still WIP)
  * @returns true if ICE-TCP support is enabled/supported, false otherwise */
 gboolean janus_ice_is_ice_lite_enabled(void);
+
 /*! \brief Method to check whether ICE-TCP support is enabled/supported or not (still WIP)
  * @returns true if ICE-TCP support is enabled/supported, false otherwise */
 gboolean janus_ice_is_ice_tcp_enabled(void);
+
 /*! \brief Method to check whether full-trickle support is enabled or not
  * @returns true if full-trickle support is enabled, false otherwise */
 gboolean janus_ice_is_full_trickle_enabled(void);
+
 /*! \brief Method to check whether IPv6 candidates are enabled/supported or not (still WIP)
  * @returns true if IPv6 candidates are enabled/supported, false otherwise */
 gboolean janus_ice_is_ipv6_enabled(void);
+
 /*! \brief Method to modify the max NACK value (i.e., the number of packets per handle to store for retransmissions)
  * @param[in] mnq The new max NACK value */
 void janus_set_max_nack_queue(uint mnq);
+
 /*! \brief Method to get the current max NACK value (i.e., the number of packets per handle to store for retransmissions)
  * @returns The current max NACK value */
 uint janus_get_max_nack_queue(void);
+
 /*! \brief Method to modify the no-media event timer (i.e., the number of seconds where no media arrives before Janus notifies this)
  * @param[in] timer The new timer value, in seconds */
 void janus_set_no_media_timer(uint timer);
+
 /*! \brief Method to get the current no-media event timer (see above)
  * @returns The current no-media event timer */
 uint janus_get_no_media_timer(void);
+
 /*! \brief Method to enable or disable the RFC4588 support negotiation
  * @param[in] enabled The new timer value, in seconds */
 void janus_set_rfc4588_enabled(gboolean enabled);
+
 /*! \brief Method to check whether the RFC4588 support is enabled
  * @returns TRUE if it's enabled, FALSE otherwise */
 gboolean janus_is_rfc4588_enabled(void);
+
 /*! \brief Method to modify the event handler statistics period (i.e., the number of seconds that should pass before Janus notifies event handlers about media statistics for a PeerConnection)
  * @param[in] timer The new timer value, in seconds */
 void janus_ice_set_event_stats_period(int period);
+
 /*! \brief Method to get the current event handler statistics period (see above)
  * @returns The current event handler stats period */
 int janus_ice_get_event_stats_period(void);
+
 /*! \brief Method to check whether libnice debugging has been enabled (http://nice.freedesktop.org/libnice/libnice-Debug-messages.html)
  * @returns True if libnice debugging is enabled, FALSE otherwise */
 gboolean janus_ice_is_ice_debugging_enabled(void);
+
 /*! \brief Method to enable libnice debugging (http://nice.freedesktop.org/libnice/libnice-Debug-messages.html) */
 void janus_ice_debugging_enable(void);
+
 /*! \brief Method to disable libnice debugging (the default) */
 void janus_ice_debugging_disable(void);
 
@@ -493,12 +522,14 @@ struct janus_ice_trickle {
  * @param[in] candidate The trickle candidate, as a Jansson object
  * @returns a pointer to the new instance, if successful, NULL otherwise */
 janus_ice_trickle *janus_ice_trickle_new(janus_ice_handle *handle, const char *transaction, json_t *candidate);
+
 /*! \brief 解析单个候选者的方法
  * @param[in] handle 候选者所属的janus_ice_handle对象
  * @param[in] candidate 需要解析的候选者
  * @param[in,out] error Error string describing the failure, if any
  * @returns 0 in case of success, any code from apierror.h in case of failure */
 gint janus_ice_trickle_parse(janus_ice_handle *handle, json_t *candidate, const char **error);
+
 /*! \brief Helper method to destroy a janus_ice_trickle instance
  * @param[in] trickle The janus_ice_trickle instance to destroy */
 void janus_ice_trickle_destroy(janus_ice_trickle *trickle);
@@ -513,35 +544,43 @@ void janus_ice_trickle_destroy(janus_ice_trickle *trickle);
  * @param[in] opaque_id The opaque identifier provided by the creator, if any (optional)
  * @returns The created Janus ICE handle if successful, NULL otherwise */
 janus_ice_handle *janus_ice_handle_create(void *gateway_session, const char *opaque_id);
+
 /*! \brief Method to find an existing Janus ICE handle from its ID
  * @param[in] gateway_session ICE实例所属的Session对象指针
  * @param[in] handle_id The Janus ICE handle ID
  * @returns The created Janus ICE handle if successful, NULL otherwise */
 janus_ice_handle *janus_ice_handle_find(void *gateway_session, guint64 handle_id);
+
 /*! \brief ICE对象与网关实例关联
  * \details 这个方法非常重要，他允许插件给Webrtc对象交换数据
  * @param[in] handle_id The Janus ICE handle ID
  * @param[in] plugin 需要关联的插件指针
  * @returns 0 in case of success, a negative integer otherwise */
 gint janus_ice_handle_attach_plugin(void *gateway_session, guint64 handle_id, janus_plugin *plugin);
+
 /*! \brief 销毁ICE实例
  * @param[in] gateway_session ICE实例所属的Session对象指针
  * @param[in] handle_id 需要销毁的ICE实例ID
  * @returns 0 in case of success, a negative integer otherwise */
 gint janus_ice_handle_destroy(void *gateway_session, guint64 handle_id);
+
 /*! \brief Method to actually free the resources allocated by a Janus ICE handle
  * @param[in] handle The Janus ICE handle instance to free */
 void janus_ice_free(janus_ice_handle *handle);
+
 /*! \brief 挂断ICE实例创建的WebRTC PeerConnection
  * @param[in] handle 管理WebRTC PeerConnection的ICE实例
  * @param[in] reason A description of why this happened */
 void janus_ice_webrtc_hangup(janus_ice_handle *handle, const char *reason);
+
 /*! \brief 释放ICE实例创建有关WebRTC PeerConnection的资源
  * @param[in] handle The Janus ICE handle instance managing the WebRTC resources to free */
 void janus_ice_webrtc_free(janus_ice_handle *handle);
+
 /*! \brief 释放ICE实例创建ICE stream实例
  * @param[in] stream The Janus ICE stream instance to free */
 void janus_ice_stream_free(janus_ice_stream *stream);
+
 /*! \brief 释放ICE实例创建janus_ice_component
  * @param[in] component The Janus ICE component instance to free */
 void janus_ice_component_free(janus_ice_component *component);
