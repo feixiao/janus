@@ -388,7 +388,7 @@ static void janus_videoroom_relay_data_packet(gpointer data, gpointer user_data)
 static void janus_videoroom_hangup_media_internal(janus_plugin_session *handle);
 
 
-// 订阅和推送模型
+// 订阅和推送模型publisher为数据推送者,subscriber为数据接收者
 typedef enum janus_videoroom_p_type {
 	janus_videoroom_p_type_none = 0,
 	janus_videoroom_p_type_subscriber,			/* Generic listener/subscriber */
@@ -398,9 +398,9 @@ typedef enum janus_videoroom_p_type {
 // VideoRoom的自定义消息
 typedef struct janus_videoroom_message {
 	janus_plugin_session *handle;
-	char *transaction;
-	json_t *message;
-	json_t *jsep;
+	char 	*transaction;
+	json_t 	*message;
+	json_t  *jsep;
 } janus_videoroom_message;
 
 
@@ -603,12 +603,12 @@ static GList *old_rooms;
 static char *admin_key = NULL;
 static void janus_videoroom_free(janus_videoroom *room);
 
-// 会话结构(VideoRoom的成员) 表示一个成员
+// 会话结构(VideoRoom的成员)表示一个成员,每个数据的推送者或者接受者都会创建该对象.
 typedef struct janus_videoroom_session {
-	janus_plugin_session *handle;
+	janus_plugin_session *handle;  
 	gint64 sdp_sessid;
 	gint64 sdp_version;
-	janus_videoroom_p_type participant_type;
+	janus_videoroom_p_type participant_type;  // 参与者类型
 	gpointer participant;
 	gboolean started;
 	gboolean stopping;
@@ -699,6 +699,7 @@ typedef struct janus_videoroom_participant {
 	int udp_sock; /* The udp socket on which to forward rtp packets */
 	gboolean kicked;	/* Whether this participant has been kicked */
 } janus_videoroom_participant;
+
 static void janus_videoroom_participant_free(janus_videoroom_participant *p);
 static void janus_videoroom_rtp_forwarder_free_helper(gpointer data);
 static void janus_videoroom_srtp_context_free_helper(gpointer data);
@@ -733,6 +734,7 @@ typedef struct janus_videoroom_listener {
 	int spatial_layer, target_spatial_layer;
 	int temporal_layer, target_temporal_layer;
 } janus_videoroom_listener;
+
 static void janus_videoroom_listener_free(janus_videoroom_listener *l);
 
 typedef struct janus_videoroom_rtp_relay_packet {
@@ -1377,13 +1379,13 @@ void janus_videoroom_create_session(janus_plugin_session *handle, int *error) {
 
 	janus_videoroom_session *session = g_malloc0(sizeof(janus_videoroom_session));
 	
-	session->handle = handle; //
+	session->handle = handle; // 绑定插件调用时候传入的handle
 	
 	session->participant_type = janus_videoroom_p_type_none;
 	session->participant = NULL;
 	session->destroyed = 0;
 	g_atomic_int_set(&session->hangingup, 0);
-	handle->plugin_handle = session;
+	handle->plugin_handle = session; // plugin_handle 为plugin插件的具体实现
 
 	janus_mutex_lock(&sessions_mutex);
 	g_hash_table_insert(sessions, handle, session);
@@ -1392,6 +1394,7 @@ void janus_videoroom_create_session(janus_plugin_session *handle, int *error) {
 	return;
 }
 
+// 通知房间里面的成员其他成员的加入或者离开信息
 static void janus_videoroom_notify_participants(janus_videoroom_participant *participant, json_t *msg) {
 	/* participant->room->mutex has to be locked. */
 	if(participant->room == NULL)
@@ -1409,7 +1412,7 @@ static void janus_videoroom_notify_participants(janus_videoroom_participant *par
 	}
 }
 
-// 通知相关参与者有新的参与者加入
+// 通知相关参与者(同一个会议下面的全部的数据推送者)有新的参与者加入
 static void janus_videoroom_participant_joining(janus_videoroom_participant *p) {
 	/* we need to check if the room still exists, may have been destroyed already */
 	if(p->room == NULL)
@@ -1432,6 +1435,7 @@ static void janus_videoroom_participant_joining(janus_videoroom_participant *p) 
 		json_object_set_new(event, "room", json_integer(p->room_id));
 		json_object_set_new(event, "joining", user);
 		janus_mutex_lock(&p->room->mutex);
+		// 通知有新成员加入信息
 		janus_videoroom_notify_participants(p, event);
 		janus_mutex_unlock(&p->room->mutex);
 		/* user gets deref-ed by the owner event */
@@ -1439,6 +1443,7 @@ static void janus_videoroom_participant_joining(janus_videoroom_participant *p) 
 	}
 }
 
+// 成员离开或者不推流
 static void janus_videoroom_leave_or_unpublish(janus_videoroom_participant *participant, gboolean is_leaving, gboolean kicked) {
 	/* we need to check if the room still exists, may have been destroyed already */
 	if(participant->room == NULL)
