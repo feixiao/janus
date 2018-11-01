@@ -325,18 +325,20 @@ struct janus_callbacks {
 	 * @param[in] jsep The json_t object containing the JSEP type, the SDP attached to the message/event, if any (offer/answer), and whether this is an update */
 	int (* const push_event)(janus_plugin_session *handle, janus_plugin *plugin, const char *transaction, json_t *message, json_t *jsep);
 
-	/*! \brief Callback to relay RTP packets to a peer
+	/*! \brief 发送RTP数据给对端
 	 * @param[in] handle The plugin/gateway session used for this peer
-	 * @param[in] video Whether this is an audio or a video frame
-	 * @param[in] buf The packet data (buffer)
-	 * @param[in] len The buffer lenght */
+	 * @param[in] video 是否为视频包
+	 * @param[in] buf 数据buffer
+	 * @param[in] len buffer大小 */
 	void (* const relay_rtp)(janus_plugin_session *handle, int video, char *buf, int len);
-	/*! \brief Callback to relay RTCP messages to a peer
+
+	/*! \brief 发送RTCP数据给对端
 	 * @param[in] handle The plugin/gateway session that will be used for this peer
-	 * @param[in] video Whether this is related to an audio or a video stream
-	 * @param[in] buf The message data (buffer)
-	 * @param[in] len The buffer lenght */
+	 * @param[in] video 是否为视频包
+	 * @param[in] buf 数据buffer
+	 * @param[in] len buffer大小 */
 	void (* const relay_rtcp)(janus_plugin_session *handle, int video, char *buf, int len);
+
 	/*! \brief Callback to relay SCTP/DataChannel messages to a peer
 	 * @param[in] handle The plugin/gateway session that will be used for this peer
 	 * @param[in] buf The message data (buffer)

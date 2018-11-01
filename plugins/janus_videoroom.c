@@ -605,7 +605,7 @@ static void janus_videoroom_free(janus_videoroom *room);
 
 // 会话结构(VideoRoom的成员)表示一个成员,每个数据的推送者或者接受者都会创建该对象.
 typedef struct janus_videoroom_session {
-	janus_plugin_session *handle;  
+	janus_plugin_session *handle;  // 管理着数据通道
 	gint64 sdp_sessid;
 	gint64 sdp_version;
 	janus_videoroom_p_type participant_type;  // 参与者类型
@@ -3059,6 +3059,7 @@ void janus_videoroom_setup_media(janus_plugin_session *handle) {
 		/* If this is a publisher, notify all listeners about the fact they can
 		 * now subscribe; if this is a listener, instead, ask the publisher a FIR */
 		if(session->participant_type == janus_videoroom_p_type_publisher) {
+			// 当数据推送者 ICE过程完成之后通知其他成员该成员加入
 			janus_videoroom_participant *participant = (janus_videoroom_participant *)session->participant;
 			/* Notify all other participants that there's a new boy in town */
 			json_t *list = json_array();
@@ -3100,11 +3101,14 @@ void janus_videoroom_setup_media(janus_plugin_session *handle) {
 				gateway->notify_event(&janus_videoroom_plugin, session->handle, info);
 			}
 		} else if(session->participant_type == janus_videoroom_p_type_subscriber) {
+			// 数据订阅者 完成ICE过程
 			janus_videoroom_listener *l = (janus_videoroom_listener *)session->participant;
 			if(l && l->feed) {
+				// 获取他监听的数据发送者对象
 				janus_videoroom_participant *p = l->feed;
 				if(p && p->session) {
 					/* Send a FIR */
+					// 视频关键帧重传请求
 					char buf[20];
 					janus_rtcp_fir((char *)&buf, 20, &p->fir_seq);
 					JANUS_LOG(LOG_VERB, "New listener available, sending FIR to %"SCNu64" (%s)\n", p->user_id, p->display ? p->display : "??");
@@ -3386,6 +3390,7 @@ void janus_videoroom_incoming_rtcp(janus_plugin_session *handle, int video, char
 		if(janus_rtcp_has_fir(buf, len)) {
 			/* We got a FIR, forward it to the publisher */
 			if(l->feed) {
+				// 当收到FIR包时候我们转发给发送者
 				janus_videoroom_participant *p = l->feed;
 				if(p && p->session) {
 					char rtcpbuf[20];
@@ -4001,10 +4006,10 @@ static void *janus_videoroom_handler(void *data) {
 					}
 					// 创建数据接受者
 					janus_videoroom_listener *listener = g_malloc0(sizeof(janus_videoroom_listener));
-					listener->session = session;				// 关联janus_videoroom_session
+					listener->session = session;			// 关联janus_videoroom_session
 					listener->room_id = videoroom->room_id;
 					listener->room = videoroom;
-					listener->feed = publisher;					// 关联数据发送者
+					listener->feed = publisher;				// 关联数据发送者
 					listener->pvt_id = pvt_id;
 					listener->close_pc = close_pc;
 					/* Initialize the listener context */
