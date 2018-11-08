@@ -358,7 +358,7 @@ gboolean janus_transport_is_auth_token_needed(janus_transport *plugin);
 gboolean janus_transport_is_auth_token_valid(janus_transport *plugin, const char *token);
 void janus_transport_notify_event(janus_transport *plugin, void *transport, json_t *event);
 
-// 传输插件的回调函数
+// 传输插件的回调函数,janus.c 主业务由该结构体驱动
 static janus_transport_callbacks janus_handler_transport =
 	{
 		.incoming_request = janus_transport_incoming_request,
@@ -370,6 +370,9 @@ static janus_transport_callbacks janus_handler_transport =
 		.events_is_enabled = janus_events_is_enabled,
 		.notify_event = janus_transport_notify_event,
 	};
+
+
+
 static GAsyncQueue *requests = NULL;		// 请求队列
 static janus_request exit_message;
 static GThreadPool *tasks = NULL;			// 任务队列(异步处理)
@@ -3788,6 +3791,7 @@ gint main(int argc, char *argv[])
 		turn_rest_api_method = (char *)item->value;
 #endif
 	/* Initialize the ICE stack now */
+	// 初始化ICE
 	janus_ice_init(ice_lite, ice_tcp, full_trickle, ipv6, rtp_min_port, rtp_max_port);
 	if(janus_ice_set_stun_server(stun_server, stun_port) < 0) {
 		JANUS_LOG(LOG_FATAL, "Invalid STUN address %s:%u\n", stun_server, stun_port);
@@ -3933,7 +3937,7 @@ gint main(int argc, char *argv[])
  
 	// 启动分发传入请求的线程
 	requests = g_async_queue_new_full((GDestroyNotify) janus_request_destroy);
-	// 线程主要处理请求队列
+	// 线程主要处理请求队列(处理函数 janus_transport_requests)
 	GThread *requests_thread = g_thread_try_new("sessions requests", &janus_transport_requests, NULL, &error);
 	if(error != NULL) {
 		JANUS_LOG(LOG_FATAL, "Got error %d (%s) trying to start requests thread...\n", error->code, error->message ? error->message : "??");

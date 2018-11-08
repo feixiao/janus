@@ -1044,9 +1044,10 @@ gint janus_ice_handle_attach_plugin(void *gateway_session, guint64 handle_id, ja
 		return JANUS_ERROR_PLUGIN_ATTACH;
 	}
 	int error = 0;
+	// plugin内部的Session
 	janus_plugin_session *session_handle = g_malloc(sizeof(janus_plugin_session));
 	// janus_plugin_session 主要是建立关联关系
-	session_handle->gateway_handle = handle;
+	session_handle->gateway_handle = handle;  // ICE Handle
 	session_handle->plugin_handle = NULL;
 	session_handle->stopped = 0;
 	// 业务插件自己实现,session_handle

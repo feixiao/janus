@@ -281,11 +281,11 @@ enum {
 struct janus_ice_handle {
 	/*! \brief janus_session结构，关联传输层对象 */
 	void *session;
-	/*! \brief Handle identifier, guaranteed to be non-zero */
+	/*! \brief 唯一标示*/
 	guint64 handle_id;
 	/*! \brief Opaque identifier, e.g., to provide inter-handle relationships to external tools */
 	char *opaque_id;
-	/*! \brief Monotonic time of when the handle has been created */
+	/*! \brief 创建时间 */
 	gint64 created;
 	/*! \brief 指向插件的指针*/
 	void *app;
@@ -623,7 +623,7 @@ void *janus_ice_thread(void *data);
 /*! \brief Janus ICE thread for sending outgoing packets */
 void *janus_ice_send_thread(void *data);
 
-/*! \brief 设置本地ICE候选人的方法 (initialization and gathering)
+/*! \brief 设置本地ICE候选人的方法 (initialization and gathering) 创建线程
  * @param[in] handle 指向ICE实例的指针 
  * @param[in] offer 指示是OFFER还是ANSWER
  * @param[in] audio 是否开启音频
