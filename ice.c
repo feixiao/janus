@@ -2089,6 +2089,7 @@ static void janus_ice_cb_nice_recv(NiceAgent *agent, guint stream_id, guint comp
 				|| stream->video_ssrc_peer_rtx[1] == packet_ssrc
 				|| stream->video_ssrc_peer[2] == packet_ssrc
 				|| stream->video_ssrc_peer_rtx[2] == packet_ssrc) ? 1 : 0);
+
 			if(!video && stream->audio_ssrc_peer != packet_ssrc) {
 				/* FIXME In case it happens, we should check what it is */
 				if(stream->audio_ssrc_peer == 0 || stream->video_ssrc_peer[0] == 0) {
@@ -2301,6 +2302,7 @@ static void janus_ice_cb_nice_recv(NiceAgent *agent, guint stream_id, guint comp
 				janus_plugin *plugin = (janus_plugin *)handle->app;
 				if(plugin && plugin->incoming_rtp)
 					plugin->incoming_rtp(handle->app_handle, video, buf, buflen);
+					
 				/* Restore the header for the stats (plugins may have messed with it) */
 				*header = backup;
 				/* Update stats (overall data received, and data received in the last second) */

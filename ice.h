@@ -381,7 +381,7 @@ struct janus_ice_stream {
 	gint audio_payload_type, video_payload_type, video_rtx_payload_type;
 	/*! \brief Codecs used by this stream */
 	char *audio_codec, *video_codec;
-	/*! \brief Pointer to function to check if a packet is a keyframe (depends on negotiated codec) */
+	/*! \brief 函数指针用于判断包是否属于关键桢 (depends on negotiated codec) */
 	gboolean (* video_is_keyframe)(char* buffer, int len);
 	/*! \brief Media direction */
 	gboolean audio_send, audio_recv, video_send, video_recv;
@@ -596,17 +596,20 @@ void janus_ice_component_free(janus_ice_component *component);
  * @param[in] buf The packet data (buffer)
  * @param[in] len The buffer lenght */
 void janus_ice_relay_rtp(janus_ice_handle *handle, int video, char *buf, int len);
+
 /*! \brief 网关RTCP回调，当一个插件有一个RTCP包发送给一个对端时调用
  * @param[in] handle  handle ICE实例
  * @param[in] video 是否为视频流相关的
  * @param[in] buf The message data (buffer)
  * @param[in] len The buffer lenght */
 void janus_ice_relay_rtcp(janus_ice_handle *handle, int video, char *buf, int len);
+
 /*! \brief 网关SCTP/DataChannel回调，当一个插件有一个RTP包发送给一个对端时调用
  * @param[in] handle The Janus ICE handle associated with the peer
  * @param[in] buf The message data (buffer)
  * @param[in] len The buffer lenght */
 void janus_ice_relay_data(janus_ice_handle *handle, char *buf, int len);
+
 /*! \brief Plugin SCTP/DataChannel callback, called by the SCTP stack when when there's data for a plugin
  * @param[in] handle The Janus ICE handle associated with the peer
  * @param[in] buffer The message data (buffer)
@@ -620,6 +623,7 @@ void janus_ice_incoming_data(janus_ice_handle *handle, char *buffer, int length)
 ///@{
 /*! \brief Janus ICE handle thread */
 void *janus_ice_thread(void *data);
+
 /*! \brief Janus ICE thread for sending outgoing packets */
 void *janus_ice_send_thread(void *data);
 
