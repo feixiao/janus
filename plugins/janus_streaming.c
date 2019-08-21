@@ -394,18 +394,21 @@ static void janus_streaming_relay_rtp_packet(gpointer data, gpointer user_data);
 static void *janus_streaming_relay_thread(void *data);
 static void janus_streaming_hangup_media_internal(janus_plugin_session *handle);
 
+// streaming 类型
 typedef enum janus_streaming_type {
 	janus_streaming_type_none = 0,
 	janus_streaming_type_live,
 	janus_streaming_type_on_demand,
 } janus_streaming_type;
 
+// source 类型
 typedef enum janus_streaming_source {
 	janus_streaming_source_none = 0,
 	janus_streaming_source_file,
 	janus_streaming_source_rtp,
 } janus_streaming_source;
 
+// 关键帧信息
 typedef struct janus_streaming_rtp_keyframe {
 	gboolean enabled;
 	/* If enabled, we store the packets of the last keyframe, to immediately send them for new viewers */
@@ -423,6 +426,7 @@ typedef struct janus_streaming_buffer {
 } janus_streaming_buffer;
 #endif
 
+// rtp 源
 typedef struct janus_streaming_rtp_source {
 	gint audio_port;
 	in_addr_t audio_mcast;
@@ -469,6 +473,7 @@ typedef struct janus_streaming_rtp_source {
 	srtp_policy_t srtp_policy;
 } janus_streaming_rtp_source;
 
+// 文件源
 typedef struct janus_streaming_file_source {
 	char *filename;
 } janus_streaming_file_source;
@@ -526,10 +531,12 @@ janus_streaming_mountpoint *janus_streaming_create_rtp_source(
 		gboolean dovideo, char *vmcast, const janus_network_address *viface, uint16_t vport, uint8_t vcodec, char *vrtpmap, char *vfmtp, gboolean bufferkf,
 			gboolean simulcast, uint16_t vport2, uint16_t vport3, gboolean dovskew, int rtp_collision,
 		gboolean dodata, const janus_network_address *diface, uint16_t dport, gboolean buffermsg);
+
 /* Helper to create a file/ondemand live source */
 janus_streaming_mountpoint *janus_streaming_create_file_source(
 		uint64_t id, char *name, char *desc, char *filename,
 		gboolean live, gboolean doaudio, gboolean dovideo);
+
 /* Helper to create a rtsp live source */
 janus_streaming_mountpoint *janus_streaming_create_rtsp_source(
 		uint64_t id, char *name, char *desc,
@@ -743,6 +750,7 @@ int janus_streaming_init(janus_callbacks *callback, const char *config_path) {
 				cl = cl->next;
 				continue;
 			}
+			// 输入为rtp类型
 			if(!strcasecmp(type->value, "rtp")) {
 				janus_network_address video_iface, audio_iface, data_iface;
 				/* RTP live source (e.g., from gstreamer/ffmpeg/vlc/etc.) */
